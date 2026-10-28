@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>اختبار التصنيف – سابع</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap">
+<style>
+/* Layout: one narrow column, a specimen-label card per question, progress as a taxonomy ladder */
+:root{
+  --bg:#f3f5ef; --surface:#ffffff; --ink:#1f2a22; --muted:#5d6b60; --line:#d6ddd2;
+  --accent:#2f6b4f; --accent-soft:#e2eee6; --good:#2e7d4f; --good-soft:#e3f3e8; --bad:#b4442e; --bad-soft:#f8e6e1;
+  --display:"Reem Kufi","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a16; --surface:#1d251f; --ink:#e6ece5; --muted:#9fb0a3; --line:#2f3b33;
+  --accent:#7cc39c; --accent-soft:#233a2d; --good:#7cc39c; --good-soft:#1f3328; --bad:#ef8a73; --bad-soft:#3a221c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a16; --surface:#1d251f; --ink:#e6ece5; --muted:#9fb0a3; --line:#2f3b33;
+  --accent:#7cc39c; --accent-soft:#233a2d; --good:#7cc39c; --good-soft:#1f3328; --bad:#ef8a73; --bad-soft:#3a221c; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.7}
+.wrap{max-width:560px;margin:0 auto;padding-block:20px 40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:18px}
+header .eyebrow{font-size:13px;color:var(--muted);letter-spacing:.02em}
+header h1{font-family:var(--display);font-size:30px;line-height:1.3;margin:2px 0 0;text-wrap:balance;color:var(--accent)}
+.progress{display:flex;gap:4px}
+.progress span{flex:1;height:6px;border-radius:3px;background:var(--line)}
+.progress span.ok{background:var(--good)} .progress span.no{background:var(--bad)} .progress span.cur{background:var(--accent);opacity:.5}
+.meta{display:flex;justify-content:space-between;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.tag{align-self:flex-start;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:3px 10px;border-radius:20px}
+.q{font-size:20px;font-weight:700;line-height:1.6;margin:0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{font:inherit;text-align:right;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:13px 16px;cursor:pointer;transition:border-color .15s}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:focus-visible,.btn:focus-visible,.chip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opt.right{border-color:var(--good);background:var(--good-soft);font-weight:700}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt:disabled{cursor:default}
+.ltr{direction:ltr;unicode-bidi:isolate;font-style:italic}
+.feedback{border-radius:12px;padding:12px 14px;font-size:15px}
+.feedback.good{background:var(--good-soft);color:var(--ink);border-inline-start:4px solid var(--good)}
+.feedback.bad{background:var(--bad-soft);color:var(--ink);border-inline-start:4px solid var(--bad)}
+.feedback b{display:block;margin-bottom:2px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:12px;padding:14px;cursor:pointer;background:var(--accent);color:var(--surface)}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+.btn:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:10px} .row .btn{flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:15px;background:var(--bg);color:var(--ink);border:2px dashed var(--line);border-radius:22px;padding:6px 14px;cursor:pointer}
+.chip:disabled{opacity:.3;cursor:default}
+.ladder{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;min-height:40px}
+.ladder li{display:flex;gap:10px;align-items:center;padding:7px 12px;border-radius:10px;background:var(--accent-soft);font-weight:500}
+.ladder li .n{font-variant-numeric:tabular-nums;color:var(--accent);font-weight:700;min-width:18px}
+.ladder li.right{background:var(--good-soft)} .ladder li.wrong{background:var(--bad-soft)}
+.ladder li .fix{margin-inline-start:auto;font-size:13px;color:var(--muted)}
+.hint{font-size:14px;color:var(--muted);margin:0}
+.result{text-align:center;gap:10px}
+.score{font-family:var(--display);font-size:64px;line-height:1.1;color:var(--accent);font-variant-numeric:tabular-nums}
+.verdict{font-size:20px;font-weight:700;margin:0}
+.review{text-align:right;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.review div{padding:8px 12px;border-radius:10px;background:var(--bad-soft)}
+footer{font-size:13px;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap" dir="rtl">
+  <header>
+    <div class="eyebrow">علوم · الصف السابع · الوحدة الأولى · الدرس الأول</div>
+    <h1>التصنيف</h1>
+  </header>
+  <div class="progress" id="progress"></div>
+  <div class="meta"><span id="qnum"></span><span id="scoreLive"></span></div>
+  <main id="stage"></main>
+  <footer><a href="../" style="color:var(--accent)">← كل الاختبارات</a><br>الأسئلة من كتاب العلوم – وزارة التربية، الكويت (طبعة 2026/2027)</footer>
+</div>
+
+<script>
+const Q = [
+  {t:"mcq", tag:"اختر الإجابة", q:"طوّر العالم لينيوس تسمية الكائنات الحية بنظام:",
+   o:["أحادي","ثنائي","ثلاثي","رباعي"], a:1,
+   e:"نظام التسمية الثنائية: اسمين لاتينيين يمثلان الجنس والنوع."},
+  {t:"mcq", tag:"اختر الإجابة", q:"أعلى مستوى في تصنيف الكائنات الحية هو:",
+   o:["النوع","الجنس","المملكة","الطائفة"], a:2,
+   e:"المملكة هي الأشمل، وتضم مجموعة كبيرة من الكائنات تشترك في الصفات العامة."},
+  {t:"mcq", tag:"اختر الإجابة", q:"الوحدة الأساسية للتصنيف وأصغر مستوياته هو:",
+   o:["العائلة","النوع","الرتبة","الشعبة"], a:1,
+   e:"النوع يضم أفراداً متشابهة تقدر تتزاوج وتنتج أفراداً مشابهة لها."},
+  {t:"tf", tag:"صح أو خطأ", q:"يشتمل الاسم العلمي للكائن الحي على طائفته ونوعه.",
+   a:false, e:"خطأ. الاسم العلمي يتكون من الجنس والنوع، مو الطائفة."},
+  {t:"tf", tag:"صح أو خطأ", q:"العلم الذي يسمي الكائنات الحية ويرتبها في مجموعات يسمى علم التصنيف.",
+   a:true, e:"صح. علم التصنيف يرتب الكائنات في مجموعات ليسهل التعرف عليها ودراستها."},
+  {t:"order", tag:"رتّب", q:"رتّب مستويات التصنيف تنازلياً (من الأكبر للأصغر):",
+   items:["المملكة","الشعبة","الطائفة","الرتبة","العائلة","الجنس","النوع"],
+   e:"الترتيب: المملكة ← الشعبة ← الطائفة ← الرتبة ← العائلة ← الجنس ← النوع."},
+  {t:"mcq", tag:"اختر الإجابة", q:"ينتمي الحصان العربي إلى طائفة:",
+   o:["الفقاريات","الحافريات","الثدييات","الخيليات"], a:2,
+   e:"طائفة الثدييات (إناثها تنتج اللبن). الفقاريات شعبة، الحافريات رتبة، والخيليات عائلة."},
+  {t:"mcq", tag:"اختر الإجابة", q:"الاسم العلمي للدب القطبي مكتوب بالطريقة الصحيحة في:",
+   o:['<span class="ltr">ursus Maritimus</span>','<span class="ltr">Ursus maritimus</span>','<span class="ltr">URSUS MARITIMUS</span>','<span class="ltr">Ursus Maritimus</span>'], a:1,
+   e:"اسم الجنس يبدأ بحرف كبير، واسم النوع بحرف صغير."},
+  {t:"mcq", tag:"اختر الإجابة", q:"الجربوع له أسماء كثيرة (يربوع، أبو ذنب). ليش العلماء يستخدمون الاسم العلمي؟",
+   o:["لأنه أقصر","لتوحيد اسم الكائن بين العلماء في كل العالم","لأنه بالعربي","لأنه يوصف شكل الكائن"], a:1,
+   e:'الاسم العلمي واحد في كل العالم، مثل <span class="ltr">Jaculus jaculus</span> للجربوع.'},
+  {t:"mcq", tag:"اختر الإجابة", q:"يعتمد تصنيف الكائنات الحية على:",
+   o:["حجم الكائن فقط","لون الكائن","الصفات المشتركة ودرجة التشابه بينها","مكان اكتشافه"], a:2,
+   e:"كل ما زاد التشابه بين الكائنات، نزلنا لمستوى تصنيفي أدق."}
+];
+
+let i=0, score=0, results=[];
+const $ = id=>document.getElementById(id);
+const shuffle = a=>{a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a};
+const ar = n=>n.toLocaleString("ar-EG");
+
+function drawProgress(){
+  $("progress").innerHTML = Q.map((_,k)=>`<span class="${results[k]===true?'ok':results[k]===false?'no':k===i?'cur':''}"></span>`).join("");
+  $("qnum").textContent = i<Q.length ? `سؤال ${ar(i+1)} من ${ar(Q.length)}` : "النتيجة";
+  $("scoreLive").textContent = `الدرجة: ${ar(score)}`;
+}
+
+function feedback(ok, text){
+  return `<div class="feedback ${ok?'good':'bad'}"><b>${ok?'برافو! إجابة صحيحة 👏':'لا، مو صح'}</b>${text}</div>`;
+}
+
+function nextBtn(){
+  const last = i===Q.length-1;
+  return `<button class="btn" id="next">${last?'شوف النتيجة':'السؤال اللي بعده'}</button>`;
+}
+
+function mark(ok){
+  results[i]=ok; if(ok) score++;
+  drawProgress();
+}
+
+function render(){
+  drawProgress();
+  if(i>=Q.length) return renderResult();
+  const q=Q[i]; const s=$("stage");
+  let html=`<section class="card"><span class="tag">${q.tag}</span><p class="q">${q.q}</p>`;
+  if(q.t==="mcq"){
+    html+=`<div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}">${o}</button>`).join("")}</div><div id="fb"></div>`;
+  } else if(q.t==="tf"){
+    html+=`<div class="row"><button class="opt" data-v="1" style="flex:1;text-align:center">✔️ صح</button><button class="opt" data-v="0" style="flex:1;text-align:center">✖️ خطأ</button></div><div id="fb"></div>`;
+  } else {
+    html+=`<p class="hint">اضغط على المستويات بالترتيب. أول وحدة تضغطها هي الأكبر.</p>
+      <div class="chips" id="chips">${shuffle(q.items).map(t=>`<button class="chip" data-t="${t}">${t}</button>`).join("")}</div>
+      <ol class="ladder" id="ladder"></ol>
+      <div class="row"><button class="btn ghost" id="reset">امسح</button><button class="btn" id="check" disabled>تحقق</button></div><div id="fb"></div>`;
+  }
+  s.innerHTML = html+`</section>`;
+
+  if(q.t==="mcq"){
+    s.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      const k=+b.dataset.k, ok=k===q.a;
+      s.querySelectorAll(".opt").forEach(x=>{x.disabled=true; if(+x.dataset.k===q.a)x.classList.add("right")});
+      if(!ok) b.classList.add("wrong");
+      mark(ok); $("fb").innerHTML=feedback(ok,q.e)+nextBtn(); bindNext();
+    });
+  } else if(q.t==="tf"){
+    s.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      const v=b.dataset.v==="1", ok=v===q.a;
+      s.querySelectorAll(".opt").forEach(x=>{x.disabled=true; if((x.dataset.v==="1")===q.a)x.classList.add("right")});
+      if(!ok) b.classList.add("wrong");
+      mark(ok); $("fb").innerHTML=feedback(ok,q.e)+nextBtn(); bindNext();
+    });
+  } else {
+    let picked=[];
+    const draw=()=>{
+      $("ladder").innerHTML=picked.map((t,k)=>`<li><span class="n">${ar(k+1)}</span>${t}</li>`).join("");
+      $("check").disabled = picked.length!==q.items.length;
+    };
+    s.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{picked.push(c.dataset.t);c.disabled=true;draw()});
+    $("reset").onclick=()=>{picked=[];s.querySelectorAll(".chip").forEach(c=>c.disabled=false);draw()};
+    $("check").onclick=()=>{
+      const ok=picked.every((t,k)=>t===q.items[k]);
+      $("ladder").innerHTML=picked.map((t,k)=>{const r=t===q.items[k];
+        return `<li class="${r?'right':'wrong'}"><span class="n">${ar(k+1)}</span>${t}${r?'':`<span class="fix">الصح: ${q.items[k]}</span>`}</li>`}).join("");
+      $("check").disabled=true; $("reset").disabled=true;
+      s.querySelectorAll(".chip").forEach(c=>c.disabled=true);
+      mark(ok); $("fb").innerHTML=feedback(ok,q.e)+nextBtn(); bindNext();
+    };
+  }
+}
+
+function bindNext(){
+  const n=$("next"); n.focus({preventScroll:true});
+  n.scrollIntoView({behavior:"smooth",block:"nearest"});
+  n.onclick=()=>{i++;render();window.scrollTo({top:0,behavior:"smooth"})};
+}
+
+function renderResult(){
+  const pct=score/Q.length;
+  const verdict = pct===1?"ممتاز! فاهم الدرس 100% 🌟":pct>=.8?"شغل حلو! باقي شوي ونوصل للكامل":pct>=.5?"مو شين، بس نحتاج نراجع الدرس مرة ثانية":"خلنا نقرا الدرس من الكتاب ونرجع نجرب";
+  let best=0; try{best=+(localStorage.getItem("tax7best")||0); if(score>best){best=score;localStorage.setItem("tax7best",score)}}catch(e){best=Math.max(best,score)}
+  const wrong=Q.map((q,k)=>results[k]?null:`<div><b>${q.q.replace(/<[^>]+>/g,"")}</b><br>${q.e}</div>`).filter(Boolean);
+  $("stage").innerHTML=`<section class="card result">
+    <span class="tag" style="align-self:center">النتيجة النهائية</span>
+    <div class="score">${ar(score)} / ${ar(Q.length)}</div>
+    <p class="verdict">${verdict}</p>
+    <p class="hint">أعلى درجة على هالجهاز: ${ar(best)}</p>
+    ${wrong.length?`<div class="review"><b>راجع هالأسئلة:</b>${wrong.join("")}</div>`:""}
+    <button class="btn" id="again">أعد الاختبار</button>
+  </section>`;
+  $("again").onclick=()=>{i=0;score=0;results=[];render()};
+}
+
+render();
+</script>
+
+</html>
