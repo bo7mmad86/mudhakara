@@ -8,12 +8,14 @@ const ORD = ["الأول","الثاني","الثالث","الرابع","الخا
 const LET = ["أ","ب","جـ","د"];
 const KEY = "exam-draft:" + location.pathname;
 const app = document.getElementById("app");
+if (location.hash === "#print" && window.PrintView) { window.PrintView.render(X, "exam"); return; }
+window.addEventListener("hashchange", () => location.reload());
 let submitted = false;
 const written = []; // {id, max, got:null}
 
 /* ---------- render ---------- */
 let h = `<div class="wrap">
-  <a class="back noprint" href="../">← كل الاختبارات</a>
+  <div class="toprow noprint"><a class="back" href="../">← كل الاختبارات</a><a class="mode p" href="#print">نسخة للطباعة</a></div>
   <header><div class="eyebrow">${X.eyebrow}</div><h1>${X.title}</h1></header>
   <section class="card">
     <div class="sheet-head">
@@ -22,11 +24,11 @@ let h = `<div class="wrap">
     </div>
     <div class="facts"><span>الدرجة الكلية: ${ar(X.total)}</span><span>الزمن: ${ar(X.minutes)} دقيقة</span><span>عدد الأسئلة: ${ar(X.sections.length)}</span></div>
     <p class="hint">${X.note}</p>
-    <div class="row noprint"><button class="btn ghost" id="timerBtn">ابدأ المؤقت</button><button class="btn ghost" id="printBtn">اطبع ورقة الاختبار</button></div>
+    <div class="row noprint"><button class="btn ghost" id="timerBtn">ابدأ المؤقت</button></div>
   </section>`;
 
 X.sections.forEach((s, si) => {
-  const sMarks = s.items ? s.items.length * s.each : s.marks;
+  const sMarks = s.marks != null ? s.marks : s.items.length * s.each;
   h += `<section class="card" id="sec${si}"><div class="qhead"><h2>السؤال ${ORD[si]}</h2><span class="marks">(${sMarks===1?'درجة واحدة':sMarks===2?'درجتان':ar(sMarks)+' درجات'})</span></div><p class="q" style="font-size:17px">${s.prompt}</p>`;
   if (s.type === "mcq") {
     h += `<ol class="items">${s.items.map((it,k)=>`<li class="item" id="i${si}_${k}"><span class="stem">${it.q}</span><div class="mini">${it.o.map((o,j)=>`<label><input type="radio" name="r${si}_${k}" value="${j}"> ${LET[j]}. ${o}</label>`).join("")}</div></li>`).join("")}</ol>`;
@@ -99,7 +101,6 @@ $("timerBtn").onclick = () => {
     $("timerTxt").textContent = tLeft > 0 ? `باقي ${ar(m)}:${s<10?'٠':''}${ar(s)}` : "خلص الوقت ⏰"; tLeft--; if (tLeft < -1 || submitted) clearInterval(tInt); };
   tick(); tInt = setInterval(tick, 1000);
 };
-$("printBtn").onclick = () => { try { window.print(); } catch(e){} };
 
 /* ---------- grading ---------- */
 function unanswered(){

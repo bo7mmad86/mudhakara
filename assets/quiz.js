@@ -6,10 +6,12 @@ const shuffle = a => { a = a.slice(); for (let k = a.length-1; k > 0; k--) { con
 const esc = s => String(s).replace(/"/g,"&quot;");
 const strip = s => String(s).replace(/<[^>]+>/g,"");
 const app = document.getElementById("app");
+if (location.hash === "#print" && window.PrintView) { window.PrintView.render(Z, "quiz"); return; }
+window.addEventListener("hashchange", () => location.reload());
 const TAGS = {mcq:"اختر الإجابة", tf:"صح أو خطأ", order:"رتّب", match:"صِل", fill:"أكمل الفراغ"};
 
 app.innerHTML = `<div class="wrap">
-  <a class="back" href="../">← كل الاختبارات</a>
+  <div class="toprow"><a class="back" href="../">← كل الاختبارات</a><a class="mode p" href="#print">نسخة للطباعة</a></div>
   <header><div class="eyebrow">${Z.eyebrow}</div><h1>${Z.title}</h1></header>
   <div class="progress" id="progress"></div>
   <div class="meta"><span id="qnum"></span><span id="scoreLive"></span></div>
