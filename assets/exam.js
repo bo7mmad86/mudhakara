@@ -58,7 +58,7 @@ X.sections.forEach((s, si) => {
 h += `<div id="warn"></div>
   <div class="total noprint" id="totalBar"><span id="timerTxt" class="hint"></span><button class="btn" id="submitBtn">سلّم الاختبار</button></div>
   <section class="card" id="report" hidden></section>
-  <footer>الأسئلة من كتاب العلوم – وزارة التربية، الكويت (طبعة ٢٠٢٦/٢٠٢٧)</footer></div>`;
+  <footer>الأسئلة من ${X.source || "كتاب العلوم"} – وزارة التربية، الكويت (طبعة ٢٠٢٦/٢٠٢٧)</footer></div>`;
 app.innerHTML = h;
 const $ = id => document.getElementById(id);
 

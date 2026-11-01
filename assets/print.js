@@ -49,7 +49,7 @@ function shell(data, total, minutes, body){
       </div>
     </header>
     ${body}
-    <footer class="pfoot">الأسئلة من كتاب العلوم – وزارة التربية، الكويت (طبعة ٢٠٢٦/٢٠٢٧)</footer>
+    <footer class="pfoot">الأسئلة من ${data.source || "كتاب العلوم"} – وزارة التربية، الكويت (طبعة ٢٠٢٦/٢٠٢٧)</footer>
   </article>`;
 }
 
