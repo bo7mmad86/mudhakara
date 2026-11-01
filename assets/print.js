@@ -40,7 +40,6 @@ function shell(data, total, minutes, body){
   </div>
   <article class="paper" id="paper">
     <header class="phead">
-      <h1>${data.title}</h1>
       <div class="keybanner">نموذج الإجابة – لولي الأمر</div>
       <div class="pfields">
         <span>الاسم: <i></i></span><span>التاريخ: <i></i></span>
